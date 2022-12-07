@@ -81,3 +81,19 @@ class DBStorage:
     def close(self):
         """close the sqlalchemy session"""
         self.__session.close()
+
+    def get(self, cls, id):
+        """
+        cls: class
+        id: string representing the object ID
+        """
+        return self.all().get("{}.{}".format(cls.__name__, id), None)
+
+    def count(self, cls=None):
+        """
+        cls: class (optional)
+        """
+        if cls:
+            return len(self.all(cls))
+        else:
+            return len(self.all())

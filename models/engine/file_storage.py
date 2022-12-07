@@ -33,21 +33,22 @@ class FileStorage:
         """
         sets in __objects the obj with key <obj class name>.id
         """
-        FileStorage.__objects[obj.__class__.__name__ + "." +
-                              str(obj.id)] = obj
+        self.__objects[obj.__class__.__name__ + "." +
+                       str(obj.id)] = obj
 
     def save(self):
         """
         serializes __objects to the JSON file (path: __file_path)
         """
         d = {}
-        for obj_id, obj in FileStorage.__objects.items():
+        for obj_id, obj in self.__objects.items():
             d[obj_id] = obj.to_dict()
         try:
-            with open(FileStorage.__file_path, 'w+', encoding="utf-8") as f:
+            with open(self.__file_path, 'w+', encoding="utf-8") as f:
                 json.dump(d, f, indent=4)
         except Exception:
             pass
+        self.reload()
 
     def reload(self):
         """deserializes the JSON file to
@@ -63,10 +64,12 @@ class FileStorage:
         from models.amenity import Amenity
         from models.review import Review
         try:
-            with open(FileStorage.__file_path, 'r', encoding="utf-8") as f:
+            with open(self.__file_path, 'r', encoding="utf-8") as f:
                 d = json.load(f)
-            for obj_id, objd in d.items():
-                FileStorage.__objects[obj_id] = eval(objd['__class__'])(**objd)
+                for obj in d.values():
+                    name = obj["__class__"]
+                    del obj["__class__"]
+                    self.new(eval(name)(**obj))
         except Exception:
             pass
 
@@ -80,3 +83,19 @@ class FileStorage:
     def close(self):
         """method for deserializing the JSON file to objects"""
         self.reload()
+
+    def get(self, cls, id):
+        """
+        cls: class
+        id: string representing the object ID
+        """
+        return self.all().get("{}.{}".format(cls.__name__, id), None)
+
+    def count(self, cls=None):
+        """
+        cls: class (optional)
+        """
+        if cls:
+            return len(self.all(cls))
+        else:
+            return len(self.all())
