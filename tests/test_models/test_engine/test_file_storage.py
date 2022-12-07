@@ -70,7 +70,8 @@ test_file_storage.py'])
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db',
+                     "not testing file storage")
     def test_all_returns_dict(self):
         """Test that all returns the FileStorage.__objects attr"""
         storage = FileStorage()
@@ -78,7 +79,8 @@ class TestFileStorage(unittest.TestCase):
         self.assertEqual(type(new_dict), dict)
         self.assertIs(new_dict, storage._FileStorage__objects)
 
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db',
+                     "not testing file storage")
     def test_new(self):
         """test that new adds an object to the FileStorage.__objects attr"""
         storage = FileStorage()
@@ -94,7 +96,8 @@ class TestFileStorage(unittest.TestCase):
                 self.assertEqual(test_dict, storage._FileStorage__objects)
         FileStorage._FileStorage__objects = save
 
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db',
+                     "not testing file storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
         storage = FileStorage()
@@ -113,3 +116,24 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db',
+                     "not testing file storage")
+    def test_get(self):
+        """Test that get properly returns the object provided in parameters"""
+        storage = FileStorage()
+        first_state_id = list(storage.all(State).values())[0].id
+        obj = storage.get(State, first_state_id)
+        self.assertEqual(first_state_id, obj.id)
+        """check for a nonexistent object that should return none"""
+        self.assertEqual(None, storage.get(State, -10))
+
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db',
+                     "not testing file storage")
+    def test_count(self):
+        """Test that get properly returns the object provided in parameters"""
+        storage = FileStorage()
+        nb_objs = len(storage.all())
+        self.assertEqual(nb_objs, storage.count())
+        nb_states = len(storage.all(State))
+        self.assertEqual(nb_states, storage.count(State))
