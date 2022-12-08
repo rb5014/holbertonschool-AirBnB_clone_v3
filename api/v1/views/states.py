@@ -14,7 +14,7 @@ def states():
     list_obj = []
     for k, v in storage.all(State).items():
         list_obj.append(v.to_dict())
-    return list_obj
+    return json.dumps(list_obj, indent=4)
 
 
 @app_views.route("/states", methods=['POST'],
@@ -28,7 +28,7 @@ def post_states():
         abort(400, description="Missing name")
     obj = State(**d)
     obj.save()
-    return obj.to_dict(), 201
+    return json.dumps(obj.to_dict(), indent=4), 201
 
 
 @app_views.route("/states/<state_id>", methods=['GET'],
@@ -39,7 +39,7 @@ def get_state_object(state_id):
     if obj:
         return json.dumps(obj.to_dict(), indent=4)
     else:
-        abort(404, description="Resource dcdcnot found")
+        abort(404)
 
 
 @app_views.route("/states/<state_id>", methods=['DELETE'],
@@ -51,7 +51,7 @@ def del_state_object(state_id):
         storage.delete(obj)
         return {}
     else:
-        abort(404, description="Resource not found")
+        abort(404)
 
 
 @app_views.route("/states/<state_id>", methods=['PUT'],
