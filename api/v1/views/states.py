@@ -59,11 +59,13 @@ def del_state_object(state_id):
                  strict_slashes=False)
 def put_state_object(state_id):
     """Updates a State object"""
-    obj = storage.get(State, state_id)
     d = request.get_json(silent=True)
     if d is None:
         abort(400, description="Not a JSON")
 
+    obj = storage.get(State, state_id)
+    if obj is None:
+        abort(404)
     for k, v in d.items():
         if k != "id" and k != "created_at" and k != "updated_at":
             setattr(obj, k, v)
