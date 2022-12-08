@@ -67,4 +67,5 @@ def put_state_object(state_id):
     for k, v in d.items():
         if k != "id" and k != "created_at" and k != "updated_at":
             setattr(obj, k, v)
+    storage.save()
     return json.dumps(obj.to_dict(), indent=4)
