@@ -14,7 +14,7 @@ def states():
     list_obj = []
     for k, v in storage.all(State).items():
         list_obj.append(v.to_dict())
-    return json.dumps(list_obj, indent=4)
+    return list_obj
 
 
 @app_views.route("/states", methods=['POST'],
@@ -26,25 +26,27 @@ def post_states():
         abort(400, description="Not a JSON")
     elif "name" not in d.keys():
         abort(400, description="Missing name")
-    return jsonify(State(d).to_dict, status=201)
+    obj = State(**d)
+    obj.save()
+    return obj.to_dict(), 201
 
 
 @app_views.route("/states/<state_id>", methods=['GET'],
                  strict_slashes=False)
-def get_state_object(id):
+def get_state_object(state_id):
     """Retrieves a State object"""
-    obj = storage.get(State, id)
+    obj = storage.get(State, state_id)
     if obj:
         return json.dumps(obj.to_dict(), indent=4)
     else:
-        abort(404, description="Resource not found")
+        abort(404, description="Resource dcdcnot found")
 
 
 @app_views.route("/states/<state_id>", methods=['DELETE'],
                  strict_slashes=False)
-def del_state_object(id):
+def del_state_object(state_id):
     """Deletes a State object"""
-    obj = storage.get(State, id)
+    obj = storage.get(State, state_id)
     if obj:
         storage.delete(obj)
         return {}
@@ -52,11 +54,11 @@ def del_state_object(id):
         abort(404, description="Resource not found")
 
 
-@app_views.route("/api/v1/states/<state_id>", methods=['PUT'],
+@app_views.route("/states/<state_id>", methods=['PUT'],
                  strict_slashes=False)
-def put_state_object():
+def put_state_object(state_id):
     """Updates a State object"""
-    obj = storage.get("State", id)
+    obj = storage.get(State, state_id)
     d = request.get_json(silent=True)
     if d is None:
         abort(400, description="Not a JSON")
@@ -64,4 +66,4 @@ def put_state_object():
     for k, v in d.items():
         if k != "id" and k != "created_at" and k != "updated_at":
             setattr(obj, k, v)
-    return obj
+    return obj.to_dict()
