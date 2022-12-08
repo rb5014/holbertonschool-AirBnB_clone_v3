@@ -16,16 +16,6 @@ def teardown(exception):
     storage.close()
 
 
-host = "0.0.0.0"
-if getenv("HBNB_API_HOST"):
-    host = getenv("HBNB_API_HOST")
-
-port = 5000
-if getenv("HBNB_API_PORT"):
-    try:
-        port = int(getenv("HBNB_API_HOST"))
-    except Exception:
-        pass
-
 if __name__ == "__main__":
-    app.run(host=host, port=port, threaded=True)
+    app.run(host=getenv("HBNB_API_HOST", default="0.0.0.0"),
+            port=getenv("HBNB_API_PORT", default=5000), threaded=True)
