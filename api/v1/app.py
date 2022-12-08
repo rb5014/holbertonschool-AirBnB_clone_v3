@@ -19,7 +19,7 @@ def teardown(exception):
 @app.errorhandler(404)
 def not_found(exception):
     """return an error for 404 not found"""
-    return {"error": "Not found"}
+    return ({"error": "Not found"}), 404
 
 
 if __name__ == "__main__":
