@@ -23,7 +23,7 @@ def places(city_id):
 
         places = storage.all(Place)
 
-        for k, v in places.items():
+        for v in places.values():
             if getattr(v, 'city_id') == city_id:
                 c_list.append(v.to_dict())
 
@@ -40,7 +40,7 @@ def post_place(city_id):
     data = request.get_json()
 
     if data is None:
-        abort(400, description="Not a JSON") 
+        abort(400, description="Not a JSON")
 
     if "user_id" not in data:
         abort(400, description="Missing user_id")
@@ -63,8 +63,7 @@ def post_place(city_id):
         obj = Place(**data)
 
         setattr(obj, 'city_id', city_id)
-        storage.new(obj)
-        storage.save()
+        obj.save()
         return jsonify(obj.to_dict()), 201
 
     else:
@@ -109,7 +108,7 @@ def place_delete(place_id):
 @app_views.route("/places/<place_id>", strict_slashes=False, methods=['PUT'])
 def place_update(place_id):
     """Update a place object"""
-    data = request.get_json()
+    data = request.get_json(silent=True)
 
     if data is None:
         abort(400, description="Not a JSON")
@@ -123,7 +122,6 @@ def place_update(place_id):
     for k, v in place.items():
         if k not in ignore_key:
             setattr(place, k, v)
-    place.save()
     storage.save()
 
     return jsonify(place.to_dict())
