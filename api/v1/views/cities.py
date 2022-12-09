@@ -1,11 +1,10 @@
 #!/usr/bin/python3
 """Index file of the api"""
+from flask import abort, request, jsonify
 from api.v1.views import app_views
 from models import storage
-from flask import abort, request, jsonify
 from models.state import State
 from models.city import City
-import json
 
 
 @app_views.route("/states/<state_id>/cities", methods=['GET'],
@@ -58,7 +57,7 @@ def del_city_object(city_id):
     if obj:
         storage.delete(obj)
         storage.save()
-        return {}
+        return jsonify({})
     else:
         abort(404)
 
@@ -78,4 +77,4 @@ def put_city_object(city_id):
         if k != "id" and k != "created_at" and k != "updated_at":
             setattr(obj, k, v)
     storage.save()
-    return obj.to_dict()
+    return jsonify(obj.to_dict())

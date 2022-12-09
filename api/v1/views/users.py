@@ -1,10 +1,9 @@
 #!/usr/bin/python3
 """Index file of the api"""
+from flask import abort, request, jsonify
 from api.v1.views import app_views
 from models import storage
-from flask import abort, request, jsonify
 from models.user import User
-import json
 
 
 @app_views.route("/users", methods=['GET'],
@@ -29,7 +28,7 @@ def post_users():
     obj = User(**d)
     storage.new(User)
     obj.save()
-    return json.dumps(obj.to_dict(), indent=4), 201
+    return jsonify(obj.to_dict()), 201
 
 
 @app_views.route("/users/<user_id>", methods=['GET'],

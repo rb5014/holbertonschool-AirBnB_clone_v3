@@ -1,10 +1,9 @@
 #!/usr/bin/python3
 """Index file of the api"""
+from flask import abort, request, jsonify
 from api.v1.views import app_views
 from models import storage
-from flask import abort, request, jsonify
 from models.state import State
-import json
 
 
 @app_views.route("/states", methods=['GET'],
@@ -14,7 +13,7 @@ def states():
     list_obj = []
     for k, v in storage.all(State).items():
         list_obj.append(v.to_dict())
-    return json.dumps(list_obj, indent=4)
+    return jsonify(list_obj)
 
 
 @app_views.route("/states", methods=['POST'],
@@ -28,7 +27,7 @@ def post_states():
         abort(400, description="Missing name")
     obj = State(**d)
     obj.save()
-    return json.dumps(obj.to_dict(), indent=4), 201
+    return jsonify(obj.to_dict()), 201
 
 
 @app_views.route("/states/<state_id>", methods=['GET'],
@@ -37,7 +36,7 @@ def get_state_object(state_id):
     """Retrieves a State object"""
     obj = storage.get(State, state_id)
     if obj:
-        return json.dumps(obj.to_dict(), indent=4)
+        return jsonify(obj.to_dict())
     else:
         abort(404)
 
@@ -50,7 +49,7 @@ def del_state_object(state_id):
     if obj:
         storage.delete(obj)
         storage.save()
-        return {}
+        return jsonify({}), 200
     else:
         abort(404)
 
@@ -70,4 +69,4 @@ def put_state_object(state_id):
         if k != "id" and k != "created_at" and k != "updated_at":
             setattr(obj, k, v)
     storage.save()
-    return json.dumps(obj.to_dict(), indent=4)
+    return jsonify(obj.to_dict())

@@ -1,11 +1,10 @@
 #!/usr/bin/python3
 """State object view """
 from flask import abort, jsonify, request
-from models.state import State
+from api.v1.views import app_views
+from models import storage
 from models.city import City
 from models.place import Place
-from models import storage
-from api.v1.views import app_views
 
 
 @app_views.route("/cities/<city_id>/places", strict_slashes=False,
@@ -100,7 +99,7 @@ def place_delete(place_id):
 
         place.delete()
         storage.save()
-        return {}
+        return jsonify({}), 200
 
     else:
         abort(404)
