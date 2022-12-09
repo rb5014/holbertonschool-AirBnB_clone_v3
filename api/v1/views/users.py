@@ -14,7 +14,7 @@ def users():
     list_obj = []
     for k, v in storage.all(User).items():
         list_obj.append(v.to_dict())
-    return json.dumps(list_obj, indent=4)
+    return jsonify(list_obj)
 
 
 @app_views.route("/users", methods=['POST'],
@@ -27,6 +27,7 @@ def post_users():
     elif "name" not in d.keys():
         abort(400, description="Missing name")
     obj = User(**d)
+    storage.new(User)
     obj.save()
     return json.dumps(obj.to_dict(), indent=4), 201
 
@@ -35,22 +36,25 @@ def post_users():
                  strict_slashes=False)
 def get_user_object(user_id):
     """Retrieves a State object"""
-    obj = storage.get(User, user_id)
-    if obj:
-        return json.dumps(obj.to_dict(), indent=4)
-    else:
+    if user_id is None:
         abort(404)
+    else:
+        obj = storage.get("User", user_id)
+        if obj:
+            return jsonify(obj.to_dict())
+        else:
+            abort(404)
 
 
 @app_views.route("/users/<user_id>", methods=['DELETE'],
                  strict_slashes=False)
 def del_user_object(user_id):
     """Deletes a State object"""
-    obj = storage.get(User, user_id)
+    obj = storage.get("User", user_id)
     if obj:
         storage.delete(obj)
         storage.save()
-        return {}
+        return jsonify({}), 200
     else:
         abort(404)
 
@@ -63,7 +67,7 @@ def put_user_object(user_id):
     if d is None:
         abort(400, description="Not a JSON")
 
-    obj = storage.get(User, user_id)
+    obj = storage.get("User", user_id)
     ignore_key = ["id", "email", "created_at", "updated_at"]
     if obj is None:
         abort(404)
@@ -71,4 +75,4 @@ def put_user_object(user_id):
         if k not in ignore_key:
             setattr(obj, k, v)
     storage.save()
-    return json.dumps(obj.to_dict(), indent=4)
+    return jsonify(obj.to_dict())
