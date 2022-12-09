@@ -2,7 +2,7 @@
 """Index file of the api"""
 from api.v1.views import app_views
 from models import storage
-from flask import abort, request, jsonify
+from flask import abort, request
 from models.amenity import Amenity
 import json
 
@@ -14,7 +14,7 @@ def amenities():
     list_obj = []
     for v in storage.all(Amenity).values():
         list_obj.append(v.to_dict())
-    return jsonify(list_obj)
+    return json.dumps(list_obj, indent=4)
 
 
 @app_views.route("/amenities", methods=['POST'],
@@ -30,7 +30,7 @@ def post_amenity():
     obj = Amenity(**d)
     storage.new(obj)
     storage.save()
-    return jsonify(obj.to_dict()), 201
+    return json.dumps(obj.to_dict(), indent=4), 201
 
 
 @app_views.route("/amenities/<amenity_id>", methods=['GET'],
@@ -52,7 +52,7 @@ def del_amenity_object(amenity_id):
         abort(404)
     storage.delete(obj)
     storage.save()
-    return jsonify({}) 
+    return json.dumps({})
 
 
 @app_views.route("/amenities/<amenity_id>", methods=['PUT'],
@@ -71,4 +71,4 @@ def put_city_object(amenity_id):
             setattr(obj, k, v)
     obj.save()
     storage.save()
-    return jsonify(obj.to_dict())
+    return json.dumps(obj.to_dict(), indent=4)
