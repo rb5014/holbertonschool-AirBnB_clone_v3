@@ -11,26 +11,21 @@ from models.review import Review
 @app_views.route("/places/<place_id>/reviews", strict_slashes=False,
                  methods=['GET'])
 def reviews(place_id):
-    """retrieve place object(s)"""
+    """retrieve reviews object(s)"""
     r_list = []
 
-    if place_id is not None:
+    place = storage.get(Place, place_id)
 
-        place = storage.get(Place, place_id)
-
-        if place is None:
-            abort(404)
-
-        reviews = storage.all(Review)
-
-        for v in reviews.values():
-            if getattr(v, 'city_id') == place_id:
-                r_list.append(v.to_dict())
-
-        return jsonify(r_list)
-
-    else:
+    if place is None:
         abort(404)
+
+    reviews = storage.all(Review)
+
+    for obj in reviews.values():
+        if obj.place_id == place_id:
+            r_list.append(obj.to_dict())
+       
+    return jsonify(r_list)
 
 
 @app_views.route("/places/<place_id>/reviews", strict_slashes=False,
@@ -74,17 +69,12 @@ def post_review(place_id):
                  methods=['GET'])
 def get_review_object(review_id):
     """Retreive review object with review_id"""
-    if review_id is not None:
 
-        review = storage.get(Review, review_id)
+    review = storage.get(Review, review_id)
 
-        if review is None:
-            abort(404)
-
-        return jsonify(review.to_dict())
-
-    else:
+    if review is None:
         abort(404)
+    return jsonify(review.to_dict())
 
 
 @app_views.route("reviews/<review_id>", strict_slashes=False,
