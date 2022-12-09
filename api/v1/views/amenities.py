@@ -52,7 +52,7 @@ def del_amenity_object(amenity_id):
         abort(404)
     storage.delete(obj)
     storage.save()
-    return json.dumps({})
+    return {}
 
 
 @app_views.route("/amenities/<amenity_id>", methods=['PUT'],
