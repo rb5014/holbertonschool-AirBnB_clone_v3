@@ -24,7 +24,7 @@ def reviews(place_id):
     for obj in reviews.values():
         if obj.place_id == place_id:
             r_list.append(obj.to_dict())
-       
+
     return jsonify(r_list)
 
 
