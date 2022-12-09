@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""RESTFULL API for State object view """
+"""RESTFULL API for Place object view """
 from flask import abort, jsonify, request
 from api.v1.views import app_views
 from models import storage
@@ -60,9 +60,9 @@ def post_place(city_id):
         if city is None:
             abort(404)
 
+        data['city_id'] = city_id
         obj = Place(**data)
 
-        setattr(obj, 'city_id', city_id)
         obj.save()
         return jsonify(obj.to_dict()), 201
 
@@ -97,7 +97,7 @@ def place_delete(place_id):
         if place is None:
             abort(404)
 
-        place.delete()
+        storage.delete(place)
         storage.save()
         return jsonify({}), 200
 
