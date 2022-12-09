@@ -12,10 +12,10 @@ import json
 def amenities():
     """Retrieves the list of all Amenity objects"""
     list_obj = []
-    amenity = storage.all(Amenity).values()
-    for v in amenity:
+    amenity = storage.all(Amenity)
+    for k, v in amenity.items():
         list_obj.append(v.to_dict())
-    return jsonify(list_obj)
+    return json.dumps(list_obj, indent=4)
 
 
 @app_views.route("/amenities", methods=['POST'],
@@ -26,11 +26,11 @@ def post_amenity():
     d = request.get_json(silent=True)
     if d is None:
         abort(400, description="Not a JSON")
-    elif "name" not in d.keys():
+    elif "name" not in d:
         abort(400, description="Missing name")
     obj = Amenity(**d)
     obj.save()
-    return jsonify(obj.to_dict()), 201
+    return json.dumps(obj.to_dict(), indent=4), 201
 
 
 @app_views.route("/amenities/<amenity_id>", methods=['GET'],
@@ -39,7 +39,7 @@ def get_amenity_object(amenity_id):
     """Retrieves a Amenity object"""
     obj = storage.get(Amenity, amenity_id)
     if obj:
-        return jsonify(obj.to_dict())
+        return json.dumps(obj.to_dict(), indent=4)
     else:
         abort(404)
 
@@ -72,4 +72,4 @@ def put_city_object(amenity_id):
         if k != "id" and k != "created_at" and k != "updated_at":
             setattr(obj, k, v)
     storage.save()
-    return jsonify(obj.to_dict())
+    return json.dumps(obj.to_dict(), indent=4)
