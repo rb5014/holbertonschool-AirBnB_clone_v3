@@ -5,6 +5,7 @@ from api.v1.views import app_views
 from models import storage
 from models.city import City
 from models.place import Place
+from models.user import User
 
 
 @app_views.route("/cities/<city_id>/places", strict_slashes=False,
@@ -49,9 +50,9 @@ def post_place(city_id):
 
     if city_id is not None:
 
-        user = storage.get("User", data["user_id"])
+        user = storage.get(User, data["user_id"])
 
-        city = storage.get("City", city_id)
+        city = storage.get(City, city_id)
 
         if user is None:
             abort(404)
@@ -92,7 +93,7 @@ def get_place_object(place_id):
 def place_delete(place_id):
     """Deletes a place object """
     if place_id is not None:
-        place = storage.get("Place", place_id)
+        place = storage.get(Place, place_id)
 
         if place is None:
             abort(404)
@@ -113,7 +114,7 @@ def place_update(place_id):
     if data is None:
         abort(400, description="Not a JSON")
 
-    place = storage.get("Place", place_id)
+    place = storage.get(Place, place_id)
 
     if place is None:
         abort(404)
