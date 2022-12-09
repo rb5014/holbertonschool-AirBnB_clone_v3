@@ -115,13 +115,12 @@ def place_update(place_id):
 
     place = storage.get(Place, place_id)
 
-    if place is None:
+    if not place:
         abort(404)
 
     ignore_key = ["id", "user_id", "city_id", "created_at", "updated_at"]
     for k, v in place.items():
         if k not in ignore_key:
             setattr(place, k, v)
-    storage.save()
-
+    place.save()
     return jsonify(place.to_dict())
