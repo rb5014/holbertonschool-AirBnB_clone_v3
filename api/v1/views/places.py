@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""State object view """
+"""RESTFULL API for State object view """
 from flask import abort, jsonify, request
 from api.v1.views import app_views
 from models import storage
@@ -119,7 +119,6 @@ def place_update(place_id):
         abort(404)
 
     ignore_key = ["id", "user_id", "city_id", "created_at", "updated_at"]
-    
     for k, v in place.items():
         if k not in ignore_key:
             setattr(place, k, v)

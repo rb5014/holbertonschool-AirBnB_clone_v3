@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Index file of the api"""
+"""RESTful API actions for State objects"""
 from flask import abort, request, jsonify
 from api.v1.views import app_views
 from models import storage

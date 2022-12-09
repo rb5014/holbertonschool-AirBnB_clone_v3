@@ -25,6 +25,3 @@ def count():
         classes[k] = storage.count(eval(v))
     return jsonify(classes)
 
-
-if __name__ == '__main__':
-    pass
