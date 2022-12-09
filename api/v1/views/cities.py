@@ -16,21 +16,24 @@ def cities(state_id):
     state = storage.get(State, state_id)
     if not state:
         abort(404)
-    for v in state:
+    for v in state.cities:
         list_obj.append(v.to_dict())
     return list_obj
 
 
 @app_views.route("/states/<state_id>/cities", methods=['POST'],
                  strict_slashes=False)
-def post_city():
+def post_city(state_id):
     """Creates a City"""
+    state = storage.get(State, state_id)
     d = request.get_json(silent=True)
+    if not state:
+        abort(404)
     if d is None:
         abort(400, description="Not a JSON")
     elif "name" not in d.keys():
         abort(400, description="Missing name")
-    obj = State(**d)
+    obj = City(**d)
     obj.save()
     return obj.to_dict(), 201
 
