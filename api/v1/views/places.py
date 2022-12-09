@@ -119,7 +119,7 @@ def place_update(place_id):
         abort(404)
 
     ignore_key = ["id", "user_id", "city_id", "created_at", "updated_at"]
-    for k, v in place.items():
+    for k, v in data.items():
         if k not in ignore_key:
             setattr(place, k, v)
     storage.save()

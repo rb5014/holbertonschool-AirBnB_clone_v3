@@ -119,7 +119,7 @@ def review_update(review_id):
         abort(404)
 
     ignore_key = ["id", "user_id", "place_id", "created_at", "updated_at"]
-    for k, v in review.items():
+    for k, v in data.items():
         if k not in ignore_key:
             setattr(review, k, v)
     storage.save()
