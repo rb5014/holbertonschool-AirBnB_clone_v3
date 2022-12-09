@@ -36,7 +36,7 @@ def post_city(state_id):
     obj = City(**d)
     obj.save()
     obj.state_id = state.id
-    return obj.to_dict(), 201
+    return jsonify(obj.to_dict()), 201
 
 
 @app_views.route("/cities/<city_id>", methods=['GET'],
