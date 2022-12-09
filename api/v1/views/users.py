@@ -23,8 +23,10 @@ def post_users():
     d = request.get_json(silent=True)
     if d is None:
         abort(400, description="Not a JSON")
-    elif "name" not in d.keys():
-        abort(400, description="Missing name")
+    elif "email" not in d.keys():
+        abort(400, description="Missing email")
+    elif "password" not in d.keys():
+        abort(400, description="Missing password")
     obj = User(**d)
     obj.save()
     return jsonify(obj.to_dict()), 201
