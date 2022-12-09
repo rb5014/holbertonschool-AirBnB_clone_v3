@@ -13,7 +13,7 @@ def amenities():
     """Retrieves the list of all Amenity objects"""
     list_obj = []
     amenity = storage.all(Amenity).items()
-    for v in amenities:
+    for k, v in amenities:
         list_obj.append(v.to_dict())
     return jsonify(list_obj)
 
@@ -22,7 +22,7 @@ def amenities():
                  strict_slashes=False)
 def post_amenity():
     """Creates a Amenity"""
-   
+
     d = request.get_json(silent=True)
     if d is None:
         abort(400, description="Not a JSON")
