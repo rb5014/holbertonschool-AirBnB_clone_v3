@@ -12,10 +12,9 @@ import json
 def amenities():
     """Retrieves the list of all Amenity objects"""
     list_obj = []
-    amenity = storage.all(Amenity)
-    for k, v in amenity.items():
+    for v in storage.all(Amenity).values():
         list_obj.append(v.to_dict())
-    return json.dumps(list_obj, indent=4)
+    return jsonify(list_obj)
 
 
 @app_views.route("/amenities", methods=['POST'],
@@ -26,7 +25,7 @@ def post_amenity():
     d = request.get_json(silent=True)
     if d is None:
         abort(400, description="Not a JSON")
-    elif "name" not in d:
+    elif "name" not in d.keys():
         abort(400, description="Missing name")
     obj = Amenity(**d)
     obj.save()
@@ -38,10 +37,9 @@ def post_amenity():
 def get_amenity_object(amenity_id):
     """Retrieves a Amenity object"""
     obj = storage.get(Amenity, amenity_id)
-    if obj:
-        return json.dumps(obj.to_dict(), indent=4)
-    else:
+    if not obj:
         abort(404)
+    return json.dumps(obj.to_dict(), indent=4)
 
 
 @app_views.route("/amenities/<amenity_id>", methods=['DELETE'],
@@ -49,12 +47,13 @@ def get_amenity_object(amenity_id):
 def del_amenity_object(amenity_id):
     """Deletes a Amenity object"""
     obj = storage.get(Amenity, amenity_id)
-    if obj:
-        storage.delete(obj)
-        storage.save()
-        return {}
-    else:
+    if not obj:
         abort(404)
+    storage.delete(obj)
+    storage.save()
+    return jsonify({})
+    
+        
 
 
 @app_views.route("/amenities/<amenity_id>", methods=['PUT'],
