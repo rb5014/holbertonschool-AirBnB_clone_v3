@@ -35,7 +35,7 @@ def post_amenity():
                  strict_slashes=False)
 def get_amenity_object(amenity_id):
     """Retrieves a Amenity object"""
-    obj = storage.get("Amenity", amenity_id)
+    obj = storage.get(Amenity, amenity_id)
     if not obj:
         abort(404)
     return jsonify(obj.to_dict())
@@ -45,7 +45,7 @@ def get_amenity_object(amenity_id):
                  strict_slashes=False)
 def del_amenity_object(amenity_id):
     """Deletes a Amenity object"""
-    obj = storage.get("Amenity", amenity_id)
+    obj = storage.get(Amenity, amenity_id)
     if not obj:
         abort(404)
     storage.delete(obj)
@@ -58,7 +58,7 @@ def del_amenity_object(amenity_id):
 def put_amenity_object(amenity_id):
     """Updates a Amenity object"""
     d = request.get_json(silent=True)
-    obj = storage.get("Amenity", amenity_id)
+    obj = storage.get(Amenity, amenity_id)
     if not obj:
         abort(404)
     if d is None:
