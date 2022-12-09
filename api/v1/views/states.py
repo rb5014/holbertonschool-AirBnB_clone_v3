@@ -48,10 +48,11 @@ def del_state_object(state_id):
     """Deletes a State object"""
     obj = storage.get(State, state_id)
     if obj:
+        storage.delete(obj)
+        storage.save()
+        return {}
+    else:
         abort(404)
-    storage.delete(obj)
-    storage.save()
-    return {}
 
 
 @app_views.route("/states/<state_id>", methods=['PUT'],
