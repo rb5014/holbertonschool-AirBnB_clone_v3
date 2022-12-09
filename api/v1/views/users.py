@@ -38,7 +38,7 @@ def get_user_object(user_id):
     if user_id is None:
         abort(404)
     else:
-        obj = storage.get("User", user_id)
+        obj = storage.get(User, user_id)
         if obj:
             return jsonify(obj.to_dict())
         else:
@@ -66,7 +66,7 @@ def put_user_object(user_id):
     if d is None:
         abort(400, description="Not a JSON")
 
-    obj = storage.get("User", user_id)
+    obj = storage.get(User, user_id)
     ignore_key = ["id", "email", "created_at", "updated_at"]
     if obj is None:
         abort(404)
