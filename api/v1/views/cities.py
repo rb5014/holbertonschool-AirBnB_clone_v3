@@ -5,6 +5,7 @@ from api.v1.views import app_views
 from models import storage
 from models.state import State
 from models.city import City
+import json
 
 
 @app_views.route("/states/<state_id>/cities", methods=['GET'],
@@ -35,7 +36,7 @@ def post_city(state_id):
     obj = City(**d)
     obj.save()
     obj.state_id = state.id
-    return jsonify(obj.to_dict()), 201
+    return json.dumps(obj.to_dict()), 201
 
 
 @app_views.route("/cities/<city_id>", methods=['GET'],
