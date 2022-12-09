@@ -20,7 +20,6 @@ def amenities():
                  strict_slashes=False)
 def post_amenity():
     """Creates a Amenity"""
-
     d = request.get_json(silent=True)
     if d is None:
         abort(400, description="Not a JSON")
@@ -56,7 +55,7 @@ def del_amenity_object(amenity_id):
 
 @app_views.route("/amenities/<amenity_id>", methods=['PUT'],
                  strict_slashes=False)
-def put_city_object(amenity_id):
+def put_amenity_object(amenity_id):
     """Updates a Amenity object"""
     d = request.get_json(silent=True)
     obj = storage.get("Amenity", amenity_id)
