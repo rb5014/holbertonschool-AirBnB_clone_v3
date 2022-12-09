@@ -12,8 +12,8 @@ import json
 def amenities():
     """Retrieves the list of all Amenity objects"""
     list_obj = []
-    amenity = storage.all(Amenity).items()
-    for k, v in amenities:
+    amenity = storage.all(Amenity).values()
+    for v in amenities:
         list_obj.append(v.to_dict())
     return jsonify(list_obj)
 
