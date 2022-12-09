@@ -76,9 +76,7 @@ class TestDBStorage(unittest.TestCase):
         """Test that all returns a dictionaty"""
         self.assertIs(type(models.storage.all()), dict)
 
-    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") != 'db',
-                     "not testing dbstorage")
-    def test_get(self):
+    def test_db_storage_get(self):
         """Test that get properly returns the object provided in parameters"""
         storage = DBStorage()
         first_state_id = list(storage.all(State).values())[0].id
@@ -87,9 +85,7 @@ class TestDBStorage(unittest.TestCase):
         """check for a nonexistent object that should return none"""
         self.assertEqual(None, storage.get(State, -10))
 
-    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") != 'db',
-                     "not testing dbstorage")
-    def test_count(self):
+    def test_db_storage_count(self):
         """Test that get properly returns the object provided in parameters"""
         storage = DBStorage()
         nb_objs = len(storage.all())
