@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """State object view """
 from flask import abort, jsonify, request
-from flask import abort
 from models.state import State
 from models.city import City
 from models.place import Place
