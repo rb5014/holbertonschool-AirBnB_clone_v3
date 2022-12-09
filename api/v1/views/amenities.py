@@ -12,8 +12,8 @@ import json
 def amenities():
     """Retrieves the list of all Amenity objects"""
     list_obj = []
-    amenity = storage.all(Amenity).values()
-    for v in amenities:
+    amenity = storage.all(Amenity)
+    for k, v in amenity.items():
         list_obj.append(v.to_dict())
     return json.dumps(list_obj, indent=4)
 
@@ -26,7 +26,7 @@ def post_amenity():
     d = request.get_json(silent=True)
     if d is None:
         abort(400, description="Not a JSON")
-    elif "name" not in d.keys():
+    elif "name" not in d:
         abort(400, description="Missing name")
     obj = Amenity(**d)
     obj.save()
