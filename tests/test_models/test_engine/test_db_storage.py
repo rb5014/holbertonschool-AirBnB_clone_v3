@@ -90,3 +90,24 @@ class TestDBStorage(unittest.TestCase):
                      "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
+
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") != 'db',
+                     "not testing dbstorage")
+    def test_get(self):
+        """Test that get properly returns the object provided in parameters"""
+        storage = DBStorage()
+        first_state_id = list(storage.all(State).values())[0].id
+        obj = storage.get(State, first_state_id)
+        self.assertEqual(first_state_id, obj.id)
+        """check for a nonexistent object that should return none"""
+        self.assertEqual(None, storage.get(State, -10))
+
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") != 'db',
+                     "not testing dbstorage")
+    def test_count(self):
+        """Test that get properly returns the object provided in parameters"""
+        storage = DBStorage()
+        nb_objs = len(storage.all())
+        self.assertEqual(nb_objs, storage.count())
+        nb_states = len(storage.all(State))
+        self.assertEqual(nb_states, storage.count(State))
