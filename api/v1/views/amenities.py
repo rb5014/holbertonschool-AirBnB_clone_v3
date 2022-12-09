@@ -15,7 +15,7 @@ def amenities():
     amenity = storage.all(Amenity).values()
     for v in amenities:
         list_obj.append(v.to_dict())
-    return jsonify(list_obj)
+    return json.dumps(list_obj, indent=4)
 
 
 @app_views.route("/amenities", methods=['POST'],
@@ -30,7 +30,7 @@ def post_amenity():
         abort(400, description="Missing name")
     obj = Amenity(**d)
     obj.save()
-    return obj.to_dict(), 201
+    return json.dumps(obj.to_dict(), indent=4), 201
 
 
 @app_views.route("/amenities/<amenity_id>", methods=['GET'],
@@ -39,14 +39,14 @@ def get_amenity_object(amenity_id):
     """Retrieves a Amenity object"""
     obj = storage.get(Amenity, amenity_id)
     if obj:
-        return jsonify(obj.to_dict())
+        return json.dumps(obj.to_dict(), indent=4)
     else:
         abort(404)
 
 
 @app_views.route("/amenities/<amenity_id>", methods=['DELETE'],
                  strict_slashes=False)
-def del_city_object(amenity_id):
+def del_amenity_object(amenity_id):
     """Deletes a Amenity object"""
     obj = storage.get(Amenity, amenity_id)
     if obj:
@@ -60,7 +60,7 @@ def del_city_object(amenity_id):
 @app_views.route("/amenities/<amenity_id>", methods=['PUT'],
                  strict_slashes=False)
 def put_city_object(amenity_id):
-    """Updates a City object"""
+    """Updates a Amenity object"""
     obj = storage.get(Amenity, amenity_id)
     d = request.get_json(silent=True)
     if not obj:
@@ -72,4 +72,4 @@ def put_city_object(amenity_id):
         if k != "id" and k != "created_at" and k != "updated_at":
             setattr(obj, k, v)
     storage.save()
-    return obj.to_dict()
+    return json.dumps(obj.to_dict(), indent=4)
