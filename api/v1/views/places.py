@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """State object view """
 from flask import abort, jsonify, request
-from flask import abort
 from models.state import State
 from models.city import City
 from models.place import Place
@@ -120,31 +119,11 @@ def place_update(place_id):
     if place is None:
         abort(404)
 
-    if 'description' in data:
-        setattr(place, 'description', data['description'])
-
-    if 'number_rooms' in data:
-        setattr(place, 'number_rooms', data['number_rooms'])
-
-    if 'number_bathrooms' in data:
-        setattr(place, 'number_bathrooms', data['number_bathrooms'])
-
-    if 'max_guest' in data:
-        setattr(place, 'max_guest', data['max_guest'])
-
-    if 'price_by_night' in data:
-        setattr(place, 'price_by_night', data['price_by_night'])
-
-    if 'latitude' in data:
-        setattr(place, 'latitude', data['latitude'])
-
-    if 'longitude' in data:
-        setattr(place, 'longitude', data['longitude'])
-
-    if 'amenity_ids' in data:
-        setattr(place, 'amenity_ids', data['amenity_ids'])
-
-    setattr(place, 'name', data['name'])
+    ignore_key = ["id", "user_id", "city_id", "created_at", "updated_at"]
+    
+    for k, v in place.items():
+        if k not in ignore_key:
+            setattr(place, k, v)
     place.save()
     storage.save()
 
