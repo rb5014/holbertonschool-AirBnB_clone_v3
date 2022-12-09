@@ -52,17 +52,15 @@ def del_amenity_object(amenity_id):
         abort(404)
     storage.delete(obj)
     storage.save()
-    return jsonify({})
-    
-        
+    return jsonify({}) 
 
 
 @app_views.route("/amenities/<amenity_id>", methods=['PUT'],
                  strict_slashes=False)
 def put_city_object(amenity_id):
     """Updates a Amenity object"""
-    obj = storage.get("Amenity", amenity_id)
     d = request.get_json(silent=True)
+    obj = storage.get("Amenity", amenity_id)
     if not obj:
         abort(404)
     if d is None:
