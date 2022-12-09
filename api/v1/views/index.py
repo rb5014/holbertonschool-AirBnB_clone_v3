@@ -22,6 +22,5 @@ def count():
                "states": "State",
                "users": "User"}
     for k, v in classes.items():
-        classes[k] = storage.count(eval(v))
+        classes[k] = storage.count(v)
     return jsonify(classes)
-
