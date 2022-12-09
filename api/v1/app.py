@@ -13,6 +13,7 @@ app.register_blueprint(app_views)
 CORS(app, resources={r"/*": {"origins": "0.0.0.0"}})
 app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
 
+
 @app.teardown_appcontext
 def teardown(exception):
     """Remove the current SQLAlchemy session."""
