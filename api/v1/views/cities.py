@@ -35,6 +35,7 @@ def post_city(state_id):
         abort(400, description="Missing name")
     obj = City(**d)
     obj.save()
+    obj.state_id = state.id
     return obj.to_dict(), 201
 
 
