@@ -18,7 +18,7 @@ def cities(state_id):
         abort(404)
     for v in state.cities:
         list_obj.append(v.to_dict())
-    return list_obj
+    return jsonify(list_obj)
 
 
 @app_views.route("/states/<state_id>/cities", methods=['POST'],
