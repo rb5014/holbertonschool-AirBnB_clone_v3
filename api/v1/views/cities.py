@@ -5,7 +5,6 @@ from api.v1.views import app_views
 from models import storage
 from models.state import State
 from models.city import City
-import json
 
 
 @app_views.route("/states/<state_id>/cities", methods=['GET'],
@@ -27,16 +26,16 @@ def post_city(state_id):
     """Creates a City"""
     state = storage.get(State, state_id)
     d = request.get_json(silent=True)
-    if not state:
+    if state is None:
         abort(404)
     if d is None:
         abort(400, description="Not a JSON")
     elif "name" not in d.keys():
         abort(400, description="Missing name")
+    d['state_id'] = state_id
     obj = City(**d)
     obj.save()
-    obj.state_id = state.id
-    return json.dumps(obj.to_dict()), 201
+    return jsonify(obj.to_dict()), 201
 
 
 @app_views.route("/cities/<city_id>", methods=['GET'],
