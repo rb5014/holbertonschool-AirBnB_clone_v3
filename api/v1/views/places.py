@@ -122,5 +122,5 @@ def place_update(place_id):
     for k, v in place.items():
         if k not in ignore_key:
             setattr(place, k, v)
-    place.save()
-    return jsonify(place.to_dict())
+    storage.save()
+    return jsonify(place.to_dict()), 200
