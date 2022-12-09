@@ -26,7 +26,6 @@ def post_users():
     elif "name" not in d.keys():
         abort(400, description="Missing name")
     obj = User(**d)
-    storage.new(User)
     obj.save()
     return jsonify(obj.to_dict()), 201
 
@@ -49,7 +48,7 @@ def get_user_object(user_id):
                  strict_slashes=False)
 def del_user_object(user_id):
     """Deletes a State object"""
-    obj = storage.get("User", user_id)
+    obj = storage.get(User, user_id)
     if obj:
         storage.delete(obj)
         storage.save()

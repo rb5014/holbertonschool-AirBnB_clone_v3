@@ -26,8 +26,7 @@ def post_amenity():
     elif "name" not in d.keys():
         abort(400, description="Missing name")
     obj = Amenity(**d)
-    storage.new(obj)
-    storage.save()
+    obj.save()
     return jsonify(obj.to_dict()), 201
 
 
@@ -67,6 +66,5 @@ def put_amenity_object(amenity_id):
     for k, v in d.items():
         if k != "id" and k != "created_at" and k != "updated_at":
             setattr(obj, k, v)
-    obj.save()
     storage.save()
     return jsonify(obj.to_dict())
